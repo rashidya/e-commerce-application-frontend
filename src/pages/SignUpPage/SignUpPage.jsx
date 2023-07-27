@@ -1,6 +1,5 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
 import { Box, TextField, Button, Typography, Link, Container } from '@mui/material';
 import { validationSchemaSignup } from '../../utils/ValidationSchema/schema';
 import { makeStyles } from '@material-ui/core/styles';
