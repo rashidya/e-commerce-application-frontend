@@ -1,58 +1,70 @@
-import React from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { Box, TextField, Button, Typography, Link, Container } from '@mui/material';
-import { validationSchemaSignup } from '../../utils/ValidationSchema/schema';
-import { makeStyles } from '@material-ui/core/styles';
+import React from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Link,
+  Container,
+} from "@mui/material";
+import { validationSchemaSignup } from "../../utils/ValidationSchema/schema";
+import { makeStyles } from "@material-ui/core/styles";
+import { useAppDispatch } from "../../redux/hooks";
+import { authJourneyAction } from "../../redux/AuthJourney/slice";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: '100vh',
-    display: 'flex',
-    alignItems: 'center',
+    height: "100vh",
+    display: "flex",
+    alignItems: "center",
   },
   signupBox: {
-    background: '#ffdae0',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '70%',
-    width: '100%',
-    borderRadius: '10px',
-    boxShadow: '0px 3px 10px rgba(0, 0, 0, 0.25)',
-    padding: '1rem',
+    background: "#ffdae0",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "70%",
+    width: "100%",
+    borderRadius: "10px",
+    boxShadow: "0px 3px 10px rgba(0, 0, 0, 0.25)",
+    padding: "1rem",
   },
   header: {
-    marginBottom: '1rem',
+    marginBottom: "1rem",
   },
   form: {
-    width: '70%',
+    width: "70%",
   },
   errorText: {
-    color: 'red',
+    color: "red",
+    fontSize: "12px",
   },
   submitButton: {
     backgroundColor: theme.palette.success.main,
-    marginTop: '1rem',
+    marginTop: "1rem",
   },
 }));
 
 const SignupPage = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const classes = useStyles();
 
   const initialValues = {
-    name: '',
-    email: '',
-    phoneNumber: '',
-    address: '',
-    username: '',
-    password: '',
+    name: "",
+    email: "",
+    phoneNumber: "",
+    address: "",
+    username: "",
+    password: "",
   };
 
-  const handleSubmit = (values) => {
-    // Add sign-up logic here
-    // values contain the form input values
-    console.log(values);
+  const handleSubmit = (values, { resetForm }) => {
+    dispatch(authJourneyAction.signUp({values,navigate}));
+    resetForm();
   };
 
   return (
@@ -62,33 +74,110 @@ const SignupPage = () => {
           <Typography variant="h4" className={classes.header}>
             Sign Up
           </Typography>
-          <Formik initialValues={initialValues} validationSchema={validationSchemaSignup} onSubmit={handleSubmit}>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchemaSignup}
+            onSubmit={handleSubmit}
+          >
             <Form className={classes.form}>
-              <Box sx={{ marginBottom: 2,marginTop:2 }}>
-                <Field as={TextField} fullWidth size="small" variant="outlined" label="Name" name="name" />
-                <ErrorMessage name="name" component="div" className={classes.errorText} />
+              <Box sx={{ marginBottom: 2, marginTop: 2 }}>
+                <Field
+                  as={TextField}
+                  fullWidth
+                  size="small"
+                  variant="outlined"
+                  label="Name"
+                  name="name"
+                />
+                <ErrorMessage
+                  name="name"
+                  component="div"
+                  className={classes.errorText}
+                />
               </Box>
               <Box sx={{ marginBottom: 2 }}>
-                <Field as={TextField} fullWidth size="small" variant="outlined" label="Email" name="email" />
-                <ErrorMessage name="email" component="div" className={classes.errorText} />
+                <Field
+                  as={TextField}
+                  fullWidth
+                  size="small"
+                  variant="outlined"
+                  label="Email"
+                  name="email"
+                />
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className={classes.errorText}
+                />
               </Box>
               <Box sx={{ marginBottom: 2 }}>
-                <Field as={TextField} fullWidth size="small" variant="outlined" label="Phone Number" name="phoneNumber" />
-                <ErrorMessage name="phoneNumber" component="div" className={classes.errorText} />
+                <Field
+                  as={TextField}
+                  fullWidth
+                  size="small"
+                  variant="outlined"
+                  label="Phone Number"
+                  name="phoneNumber"
+                />
+                <ErrorMessage
+                  name="phoneNumber"
+                  component="div"
+                  className={classes.errorText}
+                />
               </Box>
               <Box sx={{ marginBottom: 2 }}>
-                <Field as={TextField} fullWidth size="small" variant="outlined" label="Address" name="address" />
-                <ErrorMessage name="address" component="div" className={classes.errorText} />
+                <Field
+                  as={TextField}
+                  fullWidth
+                  size="small"
+                  variant="outlined"
+                  label="Address"
+                  name="address"
+                />
+                <ErrorMessage
+                  name="address"
+                  component="div"
+                  className={classes.errorText}
+                />
               </Box>
               <Box sx={{ marginBottom: 2 }}>
-                <Field as={TextField} fullWidth size="small" variant="outlined" label="Username" name="username" />
-                <ErrorMessage name="username" component="div" className={classes.errorText} />
+                <Field
+                  as={TextField}
+                  fullWidth
+                  size="small"
+                  variant="outlined"
+                  label="Username"
+                  name="username"
+                />
+                <ErrorMessage
+                  name="username"
+                  component="div"
+                  className={classes.errorText}
+                />
               </Box>
               <Box sx={{ marginBottom: 2 }}>
-                <Field as={TextField} fullWidth size="small" variant="outlined" label="Password" name="password" type="password" />
-                <ErrorMessage name="password" component="div" className={classes.errorText} />
+                <Field
+                  as={TextField}
+                  fullWidth
+                  size="small"
+                  variant="outlined"
+                  label="Password"
+                  name="password"
+                  type="password"
+                />
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className={classes.errorText}
+                />
               </Box>
-              <Button type="submit" fullWidth size="small" variant="contained" className={classes.submitButton}>
+              <Button
+                type="submit"
+                fullWidth
+                size="small"
+                variant="contained"
+                className={classes.submitButton}
+              >
                 Sign Up
               </Button>
             </Form>

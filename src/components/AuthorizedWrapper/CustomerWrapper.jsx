@@ -2,10 +2,12 @@ import React from 'react';
 import { AppBar, Toolbar, Typography, Grid, Tabs, Tab, Container } from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import ItemsPage from '../../pages/ItemsPage/Items';
 import Cart from '../../pages/CartPage/Cart';
+import { ROUTE_LOGIN_PAGE } from '../../utils/routes';
+import { useNavigate } from 'react-router-dom';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -40,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CustomerWrapper = () => {
+  const navigate =useNavigate()
   const classes = useStyles();
 
   const [selectedTab, setSelectedTab] = React.useState(0);
@@ -59,7 +62,7 @@ const CustomerWrapper = () => {
           <Tabs value={selectedTab} onChange={handleTabChange} textColor='white' >
           <Tab value={0} label={<StorefrontIcon/>} className={classes.navItems}/>
           <Tab value={1} label={<ShoppingCartIcon/>} className={classes.navItems}/>
-          <Tab value={2} label={<AccountCircleIcon />} className={classes.navItems}/>
+          <Tab value={2} label={<LogoutIcon onClick={()=>navigate(ROUTE_LOGIN_PAGE)}/>} className={classes.navItems}/>
         </Tabs>
         </Toolbar>
        

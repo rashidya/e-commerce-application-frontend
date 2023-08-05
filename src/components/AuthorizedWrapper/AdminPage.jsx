@@ -2,11 +2,12 @@ import React from 'react';
 import { AppBar, Toolbar, Typography, Grid, Tabs, Tab, Container } from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
 import ItemsPage from '../../pages/ItemsPage/Items';
-import Cart from '../../pages/CartPage/Cart';
 import AddItem from '../../pages/AddItemPage/AddItemPage';
+import { useNavigate } from 'react-router-dom';
+import { ROUTE_LOGIN_PAGE } from '../../utils/routes';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -42,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
 
 const AdminPage = () => {
   const classes = useStyles();
+  const navigate =useNavigate()
 
   const [selectedTab, setSelectedTab] = React.useState(0);
 
@@ -58,9 +60,9 @@ const AdminPage = () => {
           Eleganza
           </Typography>
           <Tabs value={selectedTab} onChange={handleTabChange} textColor='white' >
-          <Tab value={0} label={<DashboardIcon/>} className={classes.navItems}/>
+          <Tab value={0} label={<DashboardIcon />} className={classes.navItems}/>
           <Tab value={1} label={<Inventory2Icon/>} className={classes.navItems}/>
-          <Tab value={2} label={<AccountCircleIcon />} className={classes.navItems}/>
+          <Tab value={2} label={<LogoutIcon onClick={()=>navigate(ROUTE_LOGIN_PAGE)}/>} className={classes.navItems}/>
         </Tabs>
         </Toolbar>
        

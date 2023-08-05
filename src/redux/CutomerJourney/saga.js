@@ -36,9 +36,11 @@ export function* watchCheckoutAsync({payload}) {
   }
 }
 
+
 export function* watchCustomerJourneySagas() {
   yield takeEvery(customerJourneyAction.fetchItemList, watchGetItemListAsync);
   yield takeEvery(customerJourneyAction.checkout, watchCheckoutAsync);
+ 
 }
 
 const customerJourneySaga = watchCustomerJourneySagas;
