@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardActionArea,
@@ -13,16 +13,18 @@ import {
   Grid,
   ToggleButton,
 } from "@mui/material";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import { customerJourneyAction } from "../../redux/CutomerJourney/slice";
+import { useAppDispatch } from "../../redux/hooks";
 
-const ProductCard = ({ name, stock, price }) => {
-  const sizes = [...new Set(stock.map(item => item.size))];
-  const colors= [...new Set(stock.map(item => item.color))];
+const ProductCard = ({ item }) => {
+  const dispatch = useAppDispatch();
+  const sizes = [...new Set(item.stock?.map((i) => i.size))];
+  const colors = [...new Set(item.stock?.map((i) => i.color))];
 
   const [selectedSize, setSelectedSize] = useState(sizes[0]);
   const [selectedColor, setSelectedColor] = useState(colors[0]); // Set the default selected color
   const [availableColorsList, setAvailableColorList] = useState([]);
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(0);
 
   const handleColorChange = (event, newSelectedColor) => {
     setSelectedColor(newSelectedColor);
@@ -30,19 +32,48 @@ const ProductCard = ({ name, stock, price }) => {
 
   const handleSizeChange = (event, newSelectedSize) => {
     setSelectedSize(newSelectedSize);
-
   };
 
   const handleIncreaseQuantity = () => {
-    setQuantity((prevQuantity) => prevQuantity + 1);
+    if (selectedColor && selectedSize) {
+      const selctedStock = item.stock?.find(
+        (item) => item.size === selectedSize && item.color === selectedColor
+      );
+      const newQty = quantity + 1;
+      if (selctedStock?.quantityInStock < newQty) {
+        alert(
+          `${
+            selctedStock.quantityInStock === 0
+              ? "Out of Stock"
+              : `Only ${selctedStock.quantityInStock} available in the stock`
+          }`
+        );
+      } else {
+        setQuantity(newQty);
+      }
+    } else {
+      alert("Please select a size and a color");
+    }
   };
 
   const handleDecreaseQuantity = () => {
-    setQuantity((prevQuantity) => Math.max(1, prevQuantity - 1));
+    if (selectedColor && selectedSize) {
+      setQuantity((prevQuantity) => Math.max(0, prevQuantity - 1));
+    } else {
+      alert("Please select a size and a color");
+    }
   };
 
   const handleAddToCart = () => {
-    console.log(selectedColor, selectedSize, name, price,quantity);
+    const cartItem = {
+      _id: item._id,
+      color: selectedColor,
+      size: selectedSize,
+      name: item.name,
+      price: item.price,
+      quantity,
+    };
+    dispatch(customerJourneyAction.setCartItem(cartItem));
   };
 
   // useEffect(()=>{
@@ -52,24 +83,25 @@ const ProductCard = ({ name, stock, price }) => {
   //   console.log(avilableSizes);
   // },[selectedColor])
 
-  useEffect(()=>{
-    const availableStockSize = stock.filter((item)=>item.size===selectedSize)
-    const avilableColors=[...new Set(availableStockSize.map(item => item.color))];
-    setAvailableColorList(avilableColors)
-  },[selectedSize])
-
-  useEffect(()=>{
-    
-    const selctedStock = stock.find((item)=>item.size===selectedSize&&item.color===selectedColor)
-    if(selctedStock.quantityInStock<quantity){
-      alert(`Only ${selctedStock.quantityInStock} available in the stock`);
-    }
-  },[quantity])
+  useEffect(() => {
+    const availableStockSize = item.stock?.filter(
+      (item) => item.size === selectedSize
+    );
+    const avilableColors = [
+      ...new Set(availableStockSize?.map((item) => item.color)),
+    ];
+    setAvailableColorList(avilableColors);
+  }, [selectedSize]);
 
   return (
     <Card sx={{ maxWidth: 300, minWidth: 258 }}>
       <CardActionArea>
-        <CardMedia component="img" height="300" image={'/img1.jpg'} alt={name} />
+        <CardMedia
+          component="img"
+          height="300"
+          image={"/img1.jpg"}
+          alt={item.name}
+        />
         <CardContent>
           <Typography
             gutterBottom
@@ -77,7 +109,7 @@ const ProductCard = ({ name, stock, price }) => {
             component="div"
             textAlign="center"
           >
-            {name}
+            {item.name}
           </Typography>
           <Grid container direction="row" justifyContent="space-between">
             <Grid item>
@@ -96,9 +128,7 @@ const ProductCard = ({ name, stock, price }) => {
                       fontSize: "14px",
                       borderRadius: "50%",
                       padding: 0,
-                      
                     }}
-                   
                   >
                     {size}
                   </ToggleButton>
@@ -120,13 +150,13 @@ const ProductCard = ({ name, stock, price }) => {
                       height: "25px",
                       fontSize: "14px",
                       backgroundColor: `${color}!important`,
-                      border:availableColorsList.includes(color)?
-                        color === selectedColor
+                      border: availableColorsList.includes(color)
+                        ? color === selectedColor
                           ? "3px solid silver"
-                          : "1px solid silver":"1px solid black",
+                          : "1px solid silver"
+                        : "1px solid black",
                       borderRadius: "10%",
                       padding: 0,
-                     
                     }}
                     disabled={!availableColorsList.includes(color)}
                   >
@@ -137,7 +167,7 @@ const ProductCard = ({ name, stock, price }) => {
             </Grid>
           </Grid>
           <Typography variant="body1" textAlign="center">
-            Rs. {price}
+            Rs. {item.price}
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -145,7 +175,16 @@ const ProductCard = ({ name, stock, price }) => {
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item>
             <div>
-              <Button variant="outlined" onClick={handleDecreaseQuantity} size="small" sx={{minWidth:'20px !important',width:'20px',height:'20px'}}>
+              <Button
+                variant="outlined"
+                onClick={handleDecreaseQuantity}
+                size="small"
+                sx={{
+                  minWidth: "20px !important",
+                  width: "20px",
+                  height: "20px",
+                }}
+              >
                 -
               </Button>
               <Typography
@@ -155,7 +194,16 @@ const ProductCard = ({ name, stock, price }) => {
               >
                 {quantity}
               </Typography>
-              <Button variant="outlined" onClick={handleIncreaseQuantity} size="small" sx={{minWidth:'20px !important',width:'20px',height:'20px'}}>
+              <Button
+                variant="outlined"
+                onClick={handleIncreaseQuantity}
+                size="small"
+                sx={{
+                  minWidth: "20px !important",
+                  width: "20px",
+                  height: "20px",
+                }}
+              >
                 +
               </Button>
             </div>
@@ -167,6 +215,7 @@ const ProductCard = ({ name, stock, price }) => {
               variant="contained"
               sx={{ textTransform: "none" }}
               onClick={handleAddToCart}
+              disabled={quantity === 0}
             >
               Add to Cart
             </Button>

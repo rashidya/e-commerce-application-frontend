@@ -14,6 +14,7 @@ import {
   ROUTE_LOGIN_PAGE,
   ROUTE_SIGNUP_PAGE,
 } from "../../utils/routes";
+import AdminPage from "../AuthorizedWrapper/AdminPage";
 
 // export default function RootRouter() {
 //   return (
@@ -45,7 +46,7 @@ export default function RootRouter() {
         <Route path={ROUTE_LOGIN_PAGE} element={<LoginPage />} />
         <Route path={ROUTE_SIGNUP_PAGE} element={<SignupPage />} />
 
-        <Route path={ROUTE_ADD_ITEM_PAGE} element={<CustomerWrapper><AddItem /></CustomerWrapper>} />
+        <Route path={ROUTE_ADD_ITEM_PAGE} element={<AdminPage><AddItem /></AdminPage>} />
         <Route path={ROUTE_ITEMS_PAGE} element={<CustomerWrapper><ItemsPage /></CustomerWrapper>} />
         <Route path={ROUTE_CART_PAGE} element={<Cart />} />
         {/* <Route

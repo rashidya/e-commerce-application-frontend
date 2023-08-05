@@ -2,49 +2,34 @@ import React, { useEffect, useState } from "react";
 import { Grid, Typography } from "@mui/material";
 
 import ProductCard from "../../components/ProductCard/ProductCard";
-import { items } from "../../dummyData/items";
-import { fetchAllItems } from "../../services/itemService";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { customerJourneyAction } from "../../redux/CutomerJourney/slice";
 
 const ItemsPage = () => {
-  const [itemList, setItemList] = useState([]);
-
-  const fetchItems = async () => {
-    const list = await fetchAllItems();
-    setItemList(list);
-    console.log(itemList);
-  };
+  const dispatch = useAppDispatch();
+  const customerJourney = useAppSelector((state) => state.customerJourney);
 
   useEffect(() => {
-    if(itemList.length===0){
-    const fetchItems = async () => {
-      try {
-        const list = await fetchAllItems();
-        setItemList(list);
-      } catch (error) {
-        console.error("Error fetching items:", error);
-      }
-    };
+    dispatch(customerJourneyAction.fetchItemList());
+  }, []);
 
-    fetchItems();
-  }
-  console.log(itemList);
-  });
-
-  return items.length > 0 ? (
-    <Grid container direction="row" spacing={5}>
-      {itemList.map((item) => (
-        <Grid item>
-          <ProductCard
-            name={item.name}
-            stock={item.stock}
-            price={item.price}
-          />
-        </Grid>
-      ))}
-    </Grid>
-  ) : (
+  return (
     <div>
-      <Typography>No items found</Typography>
+      {customerJourney.itemList.length > 0 ? (
+        <Grid container direction="row" spacing={5}>
+          {customerJourney.itemList.map((item) => (
+            <Grid item>
+              <ProductCard
+                item={item}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <div>
+          <Typography>No items found</Typography>
+        </div>
+      )}
     </div>
   );
 };

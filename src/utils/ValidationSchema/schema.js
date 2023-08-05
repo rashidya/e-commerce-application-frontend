@@ -20,9 +20,9 @@ export const validationSchemaSignup = Yup.object({
 
 export const validationSchemaItem = Yup.object().shape({
   itemName: Yup.string().required("Item Name is required"),
-  imageURL: Yup.string()
-    .required("Image URL is required")
-    .url("Please enter a valid URL")
+  price: Yup.number()
+    .required("Price is required")
+    .positive("Please enter a valid price")
 });
 
 export const validationSchemaQty = Yup.object().shape({

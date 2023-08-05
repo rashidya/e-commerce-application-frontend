@@ -1,9 +1,9 @@
 import axios from '../axios'
 
 
-   export const submitProduct = async (data) => {
+   export const addItem = async (data) => {
         const promise = new Promise((resolve, reject) => {
-            axios.post('products', data)
+            axios.post('item', data)
 
                 .then((res) => {
                     return resolve(res)
