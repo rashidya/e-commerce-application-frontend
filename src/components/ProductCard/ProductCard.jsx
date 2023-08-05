@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   Card,
   CardActionArea,
@@ -15,9 +15,13 @@ import {
 } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 
-const ProductCard = ({ image, name, sizes, colors, price }) => {
+const ProductCard = ({ name, stock, price }) => {
+  const sizes = [...new Set(stock.map(item => item.size))];
+  const colors= [...new Set(stock.map(item => item.color))];
+
   const [selectedSize, setSelectedSize] = useState(sizes[0]);
   const [selectedColor, setSelectedColor] = useState(colors[0]); // Set the default selected color
+  const [availableColorsList, setAvailableColorList] = useState([]);
   const [quantity, setQuantity] = useState(1);
 
   const handleColorChange = (event, newSelectedColor) => {
@@ -26,7 +30,7 @@ const ProductCard = ({ image, name, sizes, colors, price }) => {
 
   const handleSizeChange = (event, newSelectedSize) => {
     setSelectedSize(newSelectedSize);
-    console.log(newSelectedSize);
+
   };
 
   const handleIncreaseQuantity = () => {
@@ -41,10 +45,31 @@ const ProductCard = ({ image, name, sizes, colors, price }) => {
     console.log(selectedColor, selectedSize, name, price,quantity);
   };
 
+  // useEffect(()=>{
+  //   const availableStockColor = stock.filter((item)=>item.color===selectedColor)
+  //   const avilableSizes=[...new Set(availableStockColor.map(item => item.size))];
+  //   setAvailableSizeList(avilableSizes)
+  //   console.log(avilableSizes);
+  // },[selectedColor])
+
+  useEffect(()=>{
+    const availableStockSize = stock.filter((item)=>item.size===selectedSize)
+    const avilableColors=[...new Set(availableStockSize.map(item => item.color))];
+    setAvailableColorList(avilableColors)
+  },[selectedSize])
+
+  useEffect(()=>{
+    
+    const selctedStock = stock.find((item)=>item.size===selectedSize&&item.color===selectedColor)
+    if(selctedStock.quantityInStock<quantity){
+      alert(`Only ${selctedStock.quantityInStock} available in the stock`);
+    }
+  },[quantity])
+
   return (
     <Card sx={{ maxWidth: 300, minWidth: 258 }}>
       <CardActionArea>
-        <CardMedia component="img" height="300" image={image} alt={name} />
+        <CardMedia component="img" height="300" image={'/img1.jpg'} alt={name} />
         <CardContent>
           <Typography
             gutterBottom
@@ -71,7 +96,9 @@ const ProductCard = ({ image, name, sizes, colors, price }) => {
                       fontSize: "14px",
                       borderRadius: "50%",
                       padding: 0,
+                      
                     }}
+                   
                   >
                     {size}
                   </ToggleButton>
@@ -84,7 +111,7 @@ const ProductCard = ({ image, name, sizes, colors, price }) => {
                 exclusive
                 onChange={handleColorChange}
               >
-                {colors.map((color) => (
+                {availableColorsList.map((color) => (
                   <ToggleButton
                     key={color}
                     value={color}
@@ -93,13 +120,15 @@ const ProductCard = ({ image, name, sizes, colors, price }) => {
                       height: "25px",
                       fontSize: "14px",
                       backgroundColor: `${color}!important`,
-                      border:
+                      border:availableColorsList.includes(color)?
                         color === selectedColor
                           ? "3px solid silver"
-                          : "1px solid silver",
+                          : "1px solid silver":"1px solid black",
                       borderRadius: "10%",
                       padding: 0,
+                     
                     }}
+                    disabled={!availableColorsList.includes(color)}
                   >
                     {""}
                   </ToggleButton>

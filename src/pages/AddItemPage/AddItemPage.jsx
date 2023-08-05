@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { Formik, Form, Field } from "formik";
 import { TextField, Button, Box, Typography, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { validationSchemaItem } from "../../utils/ValidationSchema/schema";
+import {
+  validationSchemaItem,
+  validationSchemaQty,
+} from "../../utils/ValidationSchema/schema";
 
 const AddItem = ({ onAddItem }) => {
   const [size, setSize] = useState("");
@@ -10,14 +13,14 @@ const AddItem = ({ onAddItem }) => {
   const [quantity, setQuantity] = useState("");
   const [itemOptions, setItemOptions] = useState([]);
 
-  const handleAddOption = () => {
+  const handleAddOption = (values) => {
     const option = {
-      size: size,
-      color: color,
-      quantity: parseInt(quantity),
+      size: values.size,
+      color: values.color,
+      quantity: parseInt(values.quantity),
     };
     setItemOptions((prevOptions) => [...prevOptions, option]);
-    resetOption();
+    console.log(option);
   };
 
   const handleSubmit = (values, { resetForm }) => {
@@ -38,19 +41,6 @@ const AddItem = ({ onAddItem }) => {
     setItemOptions((prevOptions) => prevOptions.filter((_, i) => i !== index));
   };
 
-  const resetForm = () => {
-    setItemName("");
-    setImageURL("");
-    resetOption();
-    setItemOptions([]);
-  };
-
-  const resetOption = () => {
-    setSize("");
-    setColor("");
-    setQuantity("");
-  };
-
   return (
     <Box>
       <h2>Add New Item</h2>
@@ -59,7 +49,7 @@ const AddItem = ({ onAddItem }) => {
         validationSchema={validationSchemaItem}
         onSubmit={handleSubmit}
       >
-        {({ values, touched, errors }) => (
+        {({ values, touched, errors, handleChange, handleBlur }) => (
           <Form>
             <Field
               required
@@ -68,9 +58,12 @@ const AddItem = ({ onAddItem }) => {
               label="Item Name"
               fullWidth
               margin="normal"
+              handle
               error={touched.itemName && Boolean(errors.itemName)}
               helperText={touched.itemName && errors.itemName}
               value={values.itemName}
+              onChange={handleChange}
+              onBlur={handleBlur}
             />
             <Field
               required
@@ -82,22 +75,25 @@ const AddItem = ({ onAddItem }) => {
               error={touched.imageURL && Boolean(errors.imageURL)}
               helperText={touched.imageURL && errors.imageURL}
               value={values.imageURL}
+              onChange={handleChange}
+              onBlur={handleBlur}
             />
             <Box display="flex" alignItems="center">
               <Formik
-                initialValues={{ itemName: "", imageURL: "" }}
-                validationSchema={validationSchemaItem}
-                onSubmit={handleSubmit}
+                initialValues={{ size: "", color: "", quantity: "" }}
+                validationSchema={validationSchemaQty}
+                onSubmit={handleAddOption}
               >
-                {({ values, touched, errors }) => (
+                {({ values, touched, errors, handleChange, handleBlur }) => (
                   <Form>
                     <Field
                       required
                       name="size"
                       as={TextField}
                       label="Size"
-                      value={size}
-                      onChange={(e) => e.target.value}
+                      value={values.size}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
                       sx={{ marginRight: "10px" }}
                       error={touched.size && Boolean(errors.size)}
                       helperText={touched.size && errors.size}
@@ -107,8 +103,9 @@ const AddItem = ({ onAddItem }) => {
                       name="color"
                       as={TextField}
                       label="Color"
-                      value={color}
-                      onChange={(e) => e.target.value}
+                      value={values.color}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
                       sx={{ marginRight: "10px" }}
                       error={touched.color && Boolean(errors.color)}
                       helperText={touched.color && errors.color}
@@ -119,8 +116,9 @@ const AddItem = ({ onAddItem }) => {
                       as={TextField}
                       label="Quantity"
                       type="number"
-                      value={quantity}
-                      onChange={(e) => e.target.value}
+                      value={values.quantity}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
                       sx={{ marginRight: "10px" }}
                       error={touched.quantity && Boolean(errors.quantity)}
                       helperText={touched.quantity && errors.quantity}
@@ -129,7 +127,6 @@ const AddItem = ({ onAddItem }) => {
                       type="submit"
                       variant="contained"
                       color="primary"
-                      onClick={handleAddOption}
                     >
                       Add
                     </Button>

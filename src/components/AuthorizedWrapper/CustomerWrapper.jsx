@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const LoggedInUserPage = () => {
+const CustomerWrapper = () => {
   const classes = useStyles();
 
   const [selectedTab, setSelectedTab] = React.useState(0);
@@ -88,4 +88,4 @@ const LoggedInUserPage = () => {
   );
 };
 
-export default LoggedInUserPage;
+export default CustomerWrapper;

@@ -1,13 +1,13 @@
-import logo from './logo.svg';
-import './App.css';
-import LoginPage from './pages/LoginPage/LoginPage'
-import SignupPage from './pages/SignUpPage/SignUpPage';
-import LoggedInUserPage from './components/AuthorizedWrapper/CustomerWrapper'
-import AdminPage from './components/AuthorizedWrapper/AdminPage';
+import React from "react";
+import RootRouter from './components/RootRouter/RootRouter';
 
 function App() {
   return (
-    <AdminPage/>
+    <div>
+
+    
+    <RootRouter/>
+    </div>
   );
 }
 

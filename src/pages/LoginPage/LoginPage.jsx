@@ -69,7 +69,7 @@ const LoginPage = () => {
         </Formik>
         <Box sx={{ marginTop: 2 }}>
           <Typography>
-            Not registered yet? <Link href="/signup">Sign Up</Link>
+            Not registered yet? <Link href="/register">Sign Up</Link>
           </Typography>
         </Box>
       </Box>
