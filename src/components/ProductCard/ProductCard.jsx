@@ -20,6 +20,7 @@ const ProductCard = ({ item }) => {
   const dispatch = useAppDispatch();
   const sizes = [...new Set(item.stock?.map((i) => i.size))];
   const colors = [...new Set(item.stock?.map((i) => i.color))];
+  const role =localStorage.getItem('role')
 
   const [selectedSize, setSelectedSize] = useState(sizes[0]);
   const [selectedColor, setSelectedColor] = useState(colors[0]); // Set the default selected color
@@ -171,6 +172,7 @@ const ProductCard = ({ item }) => {
           </Typography>
         </CardContent>
       </CardActionArea>
+      {role==='user' &&
       <CardActions>
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid item>
@@ -222,6 +224,7 @@ const ProductCard = ({ item }) => {
           </Grid>
         </Grid>
       </CardActions>
+}
     </Card>
   );
 };
